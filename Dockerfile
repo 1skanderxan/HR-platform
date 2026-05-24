@@ -4,9 +4,10 @@ WORKDIR /app
 
 RUN apk add --no-cache git ca-certificates
 
-COPY . .
+COPY go.mod go.sum ./
+RUN go mod download
 
-RUN go mod tidy
+COPY . .
 RUN CGO_ENABLED=0 GOOS=linux go build -o main ./cmd/main.go
 
 FROM alpine:latest
