@@ -7,7 +7,6 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/yourname/hr-portal-backend/internal/domain"
-	"github.com/yourname/hr-portal-backend/internal/geofence"
 )
 
 type AttendanceUsecase struct {
@@ -29,15 +28,6 @@ func (u *AttendanceUsecase) CheckIn(ctx context.Context, req CheckInRequest) (*d
 	existing, err := u.attendanceRepo.GetTodayByEmployee(ctx, req.EmployeeID)
 	if err == nil && existing != nil {
 		return nil, errors.New("bugun allaqachon check-in qilingan")
-	}
-
-	zone, err := u.geofenceRepo.GetActiveZone(ctx)
-	if err != nil {
-		return nil, errors.New("geofence zone topilmadi")
-	}
-
-	if !geofence.IsInsideZone(req.Latitude, req.Longitude, zone.Latitude, zone.Longitude, zone.RadiusM) {
-		return nil, errors.New("siz ish zonasidan tashqaridasiz")
 	}
 
 	now := time.Now()
